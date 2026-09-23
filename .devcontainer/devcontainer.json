@@ -1,12 +1,13 @@
 {
   "name": "Hangul-me",
 
-  // Go を土台にして、Node / Docker / GitHub CLI / Claude Code を features で足す
-  "image": "mcr.microsoft.com/devcontainers/go:1-1.24-bookworm",
+  // Go を土台にして、Node / Docker / GitHub CLI / Claude Code を features で足す。
+  // "1-bookworm" は Go 1.x の最新に追従する浮動タグ（現時点では Go 1.27）。
+  "image": "mcr.microsoft.com/devcontainers/go:1-bookworm",
 
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "22"
+      "version": "26"
     },
     // コンテナ内から docker compose を使えるようにする
     "ghcr.io/devcontainers/features/docker-in-docker:2": {

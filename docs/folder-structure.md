@@ -97,7 +97,7 @@ hangul-me/
 
 | サービス | 役割 | 備考 |
 |---|---|---|
-| `db` | PostgreSQL 16 | 初回起動で `db/migrations/` を自動実行。ロケールは `C.UTF-8`（pg_trgm がかなを扱えるように） |
+| `db` | PostgreSQL 18 | 初回起動で `db/migrations/` を自動実行。ロケールは `C.UTF-8`（pg_trgm がかなを扱えるように） |
 | `backend` | Go APIサーバー | `go run ./cmd/api`。ソースはバインドマウント |
 | `frontend` | Vite 開発サーバー | `/api` を `backend:8080` へプロキシ |
 | `rollup` | 閲覧ログの日次ロールアップ | 常駐しない。`docker compose run --rm rollup` で実行（profile: `tools`）|

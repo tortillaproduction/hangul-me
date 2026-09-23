@@ -31,14 +31,18 @@ hangul-me/
 各ディレクトリの責務と依存の向きは **[docs/folder-structure.md](docs/folder-structure.md)** にまとめています。
 開発の決まりごと（用語・ブランチ運用・ドキュメント更新）は **[CLAUDE.md](CLAUDE.md)** を参照してください。
 
-| 領域 | 採用技術 |
-|---|---|
-| フロントエンド | Vite + React + TypeScript + React Router / Tailwind CSS + daisyUI（Vercel想定） |
-| バックエンド | Go（DDD構成）/ テストは Ginkgo + Gomega |
-| DB | NeonDB（PostgreSQL）+ `pg_trgm` |
-| 認証 | Clerk（UIは Clerk Elements で自前構築。ブランディング表示なし） |
-| オブジェクトストレージ | Cloudflare R2（v2の発音音声用、未実装） |
-| AI補完 | Anthropic Messages API（候補不足時のみ呼び出し） |
+| 領域 | 採用技術 | バージョン |
+|---|---|---|
+| フロントエンド | Vite + React + TypeScript + React Router / Tailwind CSS + daisyUI（Vercel想定） | Node 26 |
+| バックエンド | Go（DDD構成）/ テストは Ginkgo + Gomega | Go 1.27 |
+| DB | PostgreSQL + `pg_trgm`（本番は NeonDB） | PostgreSQL 18 |
+| 認証 | Clerk（UIは Clerk Elements で自前構築。ブランディング表示なし） | – |
+| オブジェクトストレージ | Cloudflare R2（v2の発音音声用、未実装） | – |
+| AI補完 | Anthropic Messages API（候補不足時のみ呼び出し） | – |
+
+> Node 26 は 2026年10月に Active LTS へ移行する見込みの系列です。
+> LTS だけを使いたい場合は、`compose.yaml` / `.devcontainer/devcontainer.json` /
+> `frontend/package.json` の `engines` を Node 24 に下げれば動きます。
 
 ---
 
@@ -50,7 +54,7 @@ hangul-me/
 ### A. Dev Container で始める（推奨）
 
 VS Code で「Reopen in Container」を選ぶだけで、
-Go 1.24 / Node 22 / Docker / GitHub CLI / Claude Code が入った環境が立ち上がります。
+Go 1.27 / Node 26 / Docker / GitHub CLI / Claude Code が入った環境が立ち上がります。
 依存の取得と `.env` のひな形作成も自動で行われます。
 
 作成後、`.env` に `VITE_CLERK_PUBLISHABLE_KEY` を設定してから次へ進んでください。
@@ -66,7 +70,7 @@ docker compose up
 |---|---|---|
 | `frontend` | 5173 | Vite 開発サーバー（`/api` を backend へプロキシ） |
 | `backend` | 8080 | Go APIサーバー |
-| `db` | 5432 | PostgreSQL 16。初回起動時に `db/migrations/` が自動で流れます |
+| `db` | 5432 | PostgreSQL 18。初回起動時に `db/migrations/` が自動で流れます |
 
 - `CLERK_ISSUER` を設定しない間は、バックエンドは開発用の簡易認証で動きます
   （`Authorization: Bearer <任意の文字列>` がそのままユーザー識別子になります）

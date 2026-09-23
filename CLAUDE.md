@@ -188,8 +188,21 @@ docker compose up -d db     # 初期化スクリプトが最初から走る
 - `search_queries` に残すのは **ユーザーが選択した候補だけ**。表示しただけの候補は記録しない
 - 個別ページの閲覧は生ログ（90日）＋日次集計（恒久）の二段構え。この方針を変えない
 
+### バージョン
+
+現在の対象バージョンは以下です。上げ下げするときは、関係する定義を**すべて**揃えてください。
+
+| 対象 | バージョン | 定義している場所 |
+|---|---|---|
+| Go | 1.27 | `backend/go.mod` / `backend/Dockerfile` / `.devcontainer/devcontainer.json` |
+| Node | 26 | `frontend/Dockerfile` / `frontend/package.json`（`engines`）/ `.devcontainer/devcontainer.json` |
+| PostgreSQL | 18 | `compose.yaml` |
+
+`README.md` の技術スタック表と `docs/folder-structure.md` の記述も忘れず更新すること。
+
 ### データベース
 
+- `gen_random_uuid()` は PostgreSQL 13 以降コアに含まれる。pgcrypto 拡張は入れない
 - ロケールは必ず UTF-8 系にする
   - `locale=C` だと pg_trgm がかなを単語構成文字として扱わず、かな入力の曖昧検索が効かなくなる
   - 確認: `SELECT show_trgm('あんにょん');` が空配列でないこと

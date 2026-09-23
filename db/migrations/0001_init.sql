@@ -1,5 +1,5 @@
 -- Hangul-me 初期スキーマ
--- 対象: PostgreSQL 15+ (NeonDB)
+-- 対象: PostgreSQL 16+ (NeonDB / ローカルは PostgreSQL 18 で検証)
 --
 -- 【前提】データベースのロケールは UTF-8 系（C.UTF-8 など）であること。
 --   locale=C のまま作ると pg_trgm がカタカナ・ひらがなを単語構成文字として扱わず、
@@ -11,7 +11,8 @@
 
 BEGIN;
 
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";   -- gen_random_uuid()
+-- gen_random_uuid() は PostgreSQL 13 以降コア（pg_catalog）に含まれるため、
+-- pgcrypto 拡張は入れない。
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";    -- 読みの曖昧検索
 
 -- ---------------------------------------------------------------------------

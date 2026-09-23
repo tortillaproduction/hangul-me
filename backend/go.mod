@@ -1,6 +1,6 @@
 module github.com/hangulme/hangul-me/backend
 
-go 1.24
+go 1.27
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.1

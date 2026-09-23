@@ -13,8 +13,10 @@ services:
   # PostgreSQL（ローカル開発用。本番は NeonDB）
   # migrations/ を初期化スクリプトとして流すので、初回起動でスキーマとシードが入る
   # ---------------------------------------------------------------------------
+  # alpine ではなく Debian ベースを使うのは、glibc の C.UTF-8 ロケールで
+  # pg_trgm がかな・漢字を単語構成文字として扱う挙動を確認しているため。
   db:
-    image: postgres:16-alpine
+    image: postgres:18
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-hangulme}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hangulme}
