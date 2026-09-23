@@ -1,0 +1,119 @@
+# Hangul-me 開発用スタック
+#
+#   docker compose up            db / backend / frontend をまとめて起動
+#   docker compose run --rm rollup   閲覧ログの日次ロールアップを手動実行
+#
+# 値は .env から読みます（.env.example をコピーして作成してください）。
+# 本番は NeonDB / Vercel を使う想定なので、db サービスはローカル開発専用です。
+
+name: hangul-me
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL（ローカル開発用。本番は NeonDB）
+  # migrations/ を初期化スクリプトとして流すので、初回起動でスキーマとシードが入る
+  # ---------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hangulme}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hangulme}
+      POSTGRES_DB: ${POSTGRES_DB:-hangulme}
+      # ロケールは必ず UTF-8 系にすること。
+      # locale=C だと pg_trgm がカタカナ・ひらがなを単語構成文字として扱わず、
+      # かな入力の曖昧検索が前方一致しか効かなくなる（トリグラムが1つも生成されない）。
+      POSTGRES_INITDB_ARGS: '--encoding=UTF8 --locale=C.UTF-8'
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # ファイル名の昇順に実行される（0001_init.sql → 0002_seed_dictionary.sql）
+      - ./db/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-hangulme} -d ${POSTGRES_DB:-hangulme}']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Go APIサーバー
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-hangulme}:${POSTGRES_PASSWORD:-hangulme}@db:5432/${POSTGRES_DB:-hangulme}?sslmode=disable
+      PORT: '8080'
+      # 未設定なら開発用の簡易認証で起動する（Bearerトークンがそのままユーザーidになる）
+      CLERK_ISSUER: ${CLERK_ISSUER:-}
+      CLERK_AUDIENCE: ${CLERK_AUDIENCE:-}
+      # 未設定ならAIフォールバックは無効（DB曖昧検索のみ）
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-4-5}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5173}
+      VIEW_RETENTION_DAYS: ${VIEW_RETENTION_DAYS:-90}
+    ports:
+      - '${BACKEND_PORT:-8080}:8080'
+    volumes:
+      - ./backend:/app
+      # モジュールキャッシュはコンテナ側に残して再ダウンロードを避ける
+      - go-mod-cache:/go/pkg/mod
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:8080/healthz || exit 1']
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 40s
+
+  # ---------------------------------------------------------------------------
+  # Vite 開発サーバー
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    depends_on:
+      - backend
+    environment:
+      VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY:?VITE_CLERK_PUBLISHABLE_KEY を .env に設定してください}
+      # 同一オリジンの /api を Vite が backend へプロキシする
+      VITE_API_BASE_URL: ''
+      VITE_API_PROXY_TARGET: http://backend:8080
+      # バインドマウントでファイル変更を検知できない場合は true にする
+      VITE_USE_POLLING: ${VITE_USE_POLLING:-false}
+    ports:
+      - '${FRONTEND_PORT:-5173}:5173'
+    volumes:
+      - ./frontend:/app
+      # ホスト側の node_modules で上書きされないよう、コンテナ側を優先する
+      - frontend-node-modules:/app/node_modules
+
+  # ---------------------------------------------------------------------------
+  # 閲覧ログの日次ロールアップ（常駐しない。必要なときだけ実行）
+  #   docker compose run --rm rollup
+  # ---------------------------------------------------------------------------
+  rollup:
+    build:
+      context: ./backend
+      target: dev
+    profiles: ['tools']
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-hangulme}:${POSTGRES_PASSWORD:-hangulme}@db:5432/${POSTGRES_DB:-hangulme}?sslmode=disable
+      VIEW_RETENTION_DAYS: ${VIEW_RETENTION_DAYS:-90}
+    volumes:
+      - ./backend:/app
+      - go-mod-cache:/go/pkg/mod
+    command: ['go', 'run', './cmd/rollup']
+
+volumes:
+  db-data:
+  go-mod-cache:
+  frontend-node-modules:

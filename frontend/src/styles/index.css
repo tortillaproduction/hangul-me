@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  ダークを既定テーマにする。ライトは data-theme="hangulme-light" で明示的に切り替える。
+  背景・各種バーは紫を混ぜず、ニュートラルなダークに保つ。
+*/
+:root {
+  color-scheme: dark;
+}
+:root[data-theme='hangulme-light'] {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------------------
+   ネオン管風のロゴ
+   .glow-layer（ぼかした太い輪郭）の上に .core-layer（白＋発光）を重ねる
+   --------------------------------------------------------------------------- */
+@layer components {
+  .neon-logo {
+    @apply relative inline-block select-none leading-none;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .neon-logo .glow-layer {
+    @apply absolute inset-0 pointer-events-none;
+    color: transparent;
+    -webkit-text-stroke: 3px #8b5cf6;
+    filter: blur(7px);
+    opacity: 0.85;
+  }
+
+  .neon-logo .core-layer {
+    @apply relative;
+    color: #ffffff;
+    -webkit-text-stroke: 0.6px #c4b5fd;
+    text-shadow:
+      0 0 4px #ffffff,
+      0 0 10px #c4b5fd,
+      0 0 20px #8b5cf6,
+      0 0 38px #6d28d9;
+  }
+
+  :root[data-theme='hangulme-light'] .neon-logo .core-layer {
+    color: #4c1d95;
+    -webkit-text-stroke: 0px transparent;
+    text-shadow:
+      0 0 10px rgba(139, 92, 246, 0.35),
+      0 0 22px rgba(109, 40, 217, 0.18);
+  }
+  :root[data-theme='hangulme-light'] .neon-logo .glow-layer {
+    opacity: 0.35;
+  }
+
+  .neon-logo .flicker-dot {
+    @apply absolute rounded-full;
+    background: #c4b5fd;
+    box-shadow:
+      0 0 6px #c4b5fd,
+      0 0 14px #8b5cf6;
+  }
+
+  /* 入力欄のネオン風フォーカス装飾（ブランドカラー） */
+  .neon-focus-ring {
+    @apply border border-surface-border transition-all duration-150;
+  }
+  .neon-focus-ring[data-focused='true'] {
+    border-color: #a78bfa;
+    box-shadow:
+      0 0 0 1px rgba(167, 139, 250, 0.55),
+      0 0 12px rgba(139, 92, 246, 0.45),
+      0 0 28px rgba(109, 40, 217, 0.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neon-logo .flicker-dot {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* スクロールバー（ダーク前提の控えめな見た目） */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a40 transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #3a3a40;
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+/* ---------------------------------------------------------------------------
+   グラフの色ロール
+   単一系列の量を表すため、ブランドのviolet 1色（sequential）で統一する。
+   ダーク/ライトそれぞれの面に対して検証済みの段階を使う。
+   --------------------------------------------------------------------------- */
+.viz-root {
+  --viz-surface: #18181b;
+  --viz-series: #8b5cf6; /* dark surface で全チェックPASS */
+  --viz-track: #26262b;
+  --viz-grid: #2b2b2f;
+  --viz-text: #ececee;
+  --viz-muted: #909096;
+}
+:root[data-theme='hangulme-light'] .viz-root {
+  --viz-surface: #ffffff;
+  --viz-series: #6d28d9; /* light surface で全チェックPASS */
+  --viz-track: #efeeec;
+  --viz-grid: #e2e1de;
+  --viz-text: #1a1a1c;
+  --viz-muted: #6f6f74;
+}

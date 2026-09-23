@@ -1,0 +1,16 @@
+# Go
+/backend/bin/
+*.tsbuildinfo
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# 環境変数
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
