@@ -36,7 +36,6 @@
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
         "burkeholland.simple-react-snippets",
-        "abusaidm.html-snippets",
         // 編集支援
         "Cardinal90.multi-cursor-case-preserve",
         // 外観
@@ -52,18 +51,20 @@
 
         "[go]": {
           "editor.defaultFormatter": "golang.go",
-          "editor.codeActionsOnSave": { "source.organizeImports": "explicit" }
+          "editor.codeActionsOnSave": {"source.organizeImports": "explicit"}
         },
         "go.lintTool": "staticcheck",
         "go.testFlags": ["-v"],
-        "gopls": { "ui.semanticTokens": true },
+        "gopls": {"ui.semanticTokens": true},
 
-        "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-        "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-        "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-        "[jsonc]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-        "[css]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-        "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+        "[typescript]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
+        "[jsonc]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
+        "[css]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
+        "[markdown]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},
 
         "eslint.workingDirectories": ["frontend"],
         "tailwindCSS.experimental.classRegex": [
@@ -78,9 +79,9 @@
   // compose と同じポートを転送する
   "forwardPorts": [5173, 8080, 5432],
   "portsAttributes": {
-    "5173": { "label": "frontend (Vite)", "onAutoForward": "notify" },
-    "8080": { "label": "backend (Go API)", "onAutoForward": "silent" },
-    "5432": { "label": "postgres", "onAutoForward": "silent" }
+    "5173": {"label": "frontend (Vite)", "onAutoForward": "notify"},
+    "8080": {"label": "backend (Go API)", "onAutoForward": "silent"},
+    "5432": {"label": "postgres", "onAutoForward": "silent"}
   },
 
   // 依存の取得までを自動で済ませる
