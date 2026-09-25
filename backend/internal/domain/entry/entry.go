@@ -95,13 +95,13 @@ func New(hangulText, readingKana, readingHiragana, romanized, meaningJA string, 
 		Source:          src,
 	}
 
-	e.ApplyPhoneetics()
+	e.ApplyPhonetics()
 	return e, nil
 }
 
-// ApplyPhoneetics はハングルから分析用カラムの値を導出して自身に反映します
+// ApplyPhonetics はハングルから分析用カラムの値を導出して自身に反映します
 // ハングルを更新した場合は必ず呼び出します
-func (e *Entry) ApplyPhoneetics() {
+func (e *Entry) ApplyPhonetics() {
 	a := hangul.Analyze(e.Hangul)
 	e.InitialConsonant = a.InitialConsonant
 	e.HasFinalConsonant = a.HasFinalConsonant
