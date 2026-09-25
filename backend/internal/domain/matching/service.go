@@ -49,9 +49,9 @@ type Result struct {
 // AIGenerator は候補不足時のフォールバック先です
 // infra/llm が実装します
 type AIGenerator interface {
-	// Suggest は正規化済みの読みから候補を生成します
-	// 失敗しても致命的ではないため、呼び出し側はエラーを握り潰して
-	// DB候補のみで応答できます
+	// Suggest は正規化済みの読みから候補を生成します。
+	// 失敗しても致命的ではないため、呼び出し側はエラーを握り潰して、
+	// DB候補のみで応答できます。
 	Suggest(ctx context.Context, normalized, raw string, limit int) ([]entry.Entry, error)
 }
 

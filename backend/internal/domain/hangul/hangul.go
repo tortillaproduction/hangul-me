@@ -56,9 +56,9 @@ type Syllable struct {
 // HasFinal はこの音節がパッチムを持つかを返します
 func (s Syllable) HasFinal() bool { return s.Final != "" }
 
-// Analysis は単語1件分の音韻分析結果です
+// Analysis は単語1件分の音韻分析結果です。
 // DBの dictionary_entries.initial_consonat / has_final_consonant /
-// final_consonant に対応します
+// final_consonant に対応します。
 type Analysis struct {
 	// InitialConsonant は先頭音節の初声
 	// 「〜ニョン」「〜セヨ」のような語頭の音の傾向を見るために使います
