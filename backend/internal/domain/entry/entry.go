@@ -110,8 +110,8 @@ func (e *Entry) ApplyPhonetics() {
 
 // Repository は辞書エントリの永続化境界です
 type Repository interface {
-	// FindByID は1件取得します
-	// 見つからなければ ErrNotFound
+	// FindByID は1件取得します。
+	// 見つからなければ ErrNotFound。
 	FindByID(ctx context.Context, id uuid.UUID) (*Entry, error)
 
 	// SearchByReading は正規化済みの読みで曖昧検索し、類似度順に返します
