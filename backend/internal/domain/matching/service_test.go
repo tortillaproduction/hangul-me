@@ -235,7 +235,7 @@ var _ = Describe("候補マッチング", func() {
 				{Entry: mustEntry("안녕", "アンニョン", "annyeong", "やあ"), Score: 0.3},
 			}
 			ai.suggestions = []entry.Entry{
-				*mustEntry("안녕", "アンニョン", "annyeong", "やあ"), // DB候補と同じ
+				*mustEntry("안녕", "アンニョン", "annyeong", "やあ"), // DB候補と同じ。
 			}
 		})
 

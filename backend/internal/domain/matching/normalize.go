@@ -5,7 +5,7 @@ import (
 	"unicode"
 )
 
-// ScriptKind は入力された読みの表記系です
+// ScriptKind は入力された読みの表記系です。
 type ScriptKind string
 
 const (
@@ -15,14 +15,14 @@ const (
 	ScriptUnknown ScriptKind = "unknown"
 )
 
-// Normalize はうろ覚えの読みを比較可能な形に揃えます
+// Normalize はうろ覚えの読みを比較可能な形に揃えます。
 //
-//	・カタカナ -> ひらがな に畳む（「チンチャ」「ちんちゃ」を同一視）
-//	・アルファベットは小文字化
-//	・長音符「ー」、中黒、空白、記号を除去（「アンニョ～ン」対策）
-//	・全角英数字は半角へ
+//	・カタカナ -> ひらがな に畳む（「チンチャ」「ちんちゃ」を同一視）。
+//	・アルファベットは小文字化。
+//	・長音符「ー」、中黒、空白、記号を除去（「アンニョ～ン」対策）。
+//	・全角英数字は半角へ。
 //
-// UIには出さない内部処理です
+// UIには出さない内部処理です。
 func Normalize(raw string) string {
 	var b strings.Builder
 	b.Grow(len(raw))
@@ -30,7 +30,7 @@ func Normalize(raw string) string {
 	for _, r := range raw {
 		switch {
 		case r == 'ー' || r == '〜' || r == '～' || r == '・' || r == 'ｰ':
-			// 長音・波ダッシュ・中黒は表記ゆれなので落とす
+			// 長音・波ダッシュ・中黒は表記ゆれなので落とす。
 			continue
 		case unicode.IsSpace(r):
 			continue
@@ -53,8 +53,8 @@ func Normalize(raw string) string {
 	return b.String()
 }
 
-// DetectScript は入力の表記系を推定します
-// プレースホルダの出し分けや検索ログの分析に使います
+// DetectScript は入力の表記系を推定します。
+// プレースホルダの出し分けや検索ログの分析に使います。
 func DetectScript(raw string) ScriptKind {
 	var kana, latin, hangulCount int
 	for _, r := range raw {
@@ -82,7 +82,7 @@ func DetectScript(raw string) ScriptKind {
 func isKatakana(r rune) bool { return r >= 'ァ' && r <= 'ヶ' }
 func isHiragana(r rune) bool { return r >= 'ぁ' && r <= 'ゖ' }
 
-// katakanaToHiragana はカタカナをひらがなに畳みます（U+30A1..U+30F6）
+// katakanaToHiragana はカタカナをひらがなに畳みます（U+30A1..U+30F6）。
 func katakanaToHiragana(r rune) rune {
 	if isKatakana(r) {
 		return r - 0x60
