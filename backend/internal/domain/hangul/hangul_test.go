@@ -60,11 +60,11 @@ var _ = Describe("ハングルの字母分解", func() {
 					Expect(a.FinalConsonant).To(Equal(final))
 					Expect(a.HasFinalConsonant).To(Equal(hasFinal))
 				},
-				// 末尾にパッチムがある語
+				// 末尾にパッチムがある語。
 				Entry("안녕", "안녕", "ㅇ", "ㅇ", true),
 				Entry("대박", "대박", "ㄷ", "ㄱ", true),
 				Entry("화이팅", "화이팅", "ㅎ", "ㅇ", true),
-				// 末尾にパッチムがない語
+				// 末尾にパッチムがない語。
 				Entry("안녕하세요", "안녕하세요", "ㅇ", "", false),
 				Entry("진짜", "진짜", "ㅈ", "", false),
 				Entry("감사합니다", "감사합니다", "ㄱ", "", false),

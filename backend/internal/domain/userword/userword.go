@@ -1,4 +1,4 @@
-// Package userwordは個人の単語帳（登録単語）のドメインモデルです
+// Package userwordは個人の単語帳（登録単語）のドメインモデルです。
 package userword
 
 import (
@@ -17,21 +17,21 @@ var (
 	ErrLimitExceeded = errors.New("userword: プランの登録上限に達しています")
 )
 
-// MasteryLevelは定着度です
-// 将来の復習機能で更新します
+// MasteryLevelは定着度です。
+// 将来の復習機能で更新します。
 type MasteryLevel int
 
 const (
-	MasteryNew      MasteryLevel = 0 // 登録したて
-	MasteryLearning MasteryLevel = 1 // うろ覚え
-	MasteryFamiliar MasteryLevel = 2 // だいたい覚えた
-	MasteryMastered MasteryLevel = 3 // 覚えた
+	MasteryNew      MasteryLevel = 0 // 登録したて。
+	MasteryLearning MasteryLevel = 1 // うろ覚え。
+	MasteryFamiliar MasteryLevel = 2 // だいたい覚えた。
+	MasteryMastered MasteryLevel = 3 // 覚えた。
 )
 
-// Validは定義済みの段階かを返します
+// Validは定義済みの段階かを返します。
 func (m MasteryLevel) Valid() bool { return m >= MasteryNew && m <= MasteryMastered }
 
-// Labelは画面表示用のラベルを返します
+// Labelは画面表示用のラベルを返します。
 func (m MasteryLevel) Label() string {
 	switch m {
 	case MasteryLearning:
@@ -45,25 +45,25 @@ func (m MasteryLevel) Label() string {
 	}
 }
 
-// UserWordは「ユーザーが単語帳に登録した単語」です
+// UserWordは「ユーザーが単語帳に登録した単語」です。
 type UserWord struct {
 	ID      uuid.UUID
 	UserID  uuid.UUID
 	EntryID uuid.UUID
-	// Memoはユーザー独自のメモ
+	// Memoはユーザー独自のメモ。
 	Memo string
-	// EncounteredTitleは「この単語はどこで聞いた？」の記録
-	// ドラマ・映画名などを入れ、作品別の登録数の集計に使います
+	// EncounteredTitleは「この単語はどこで聞いた？」の記録。
+	// ドラマ・映画名などを入れ、作品別の登録数の集計に使います。
 	EncounteredTitle string
 	MasteryLevel     MasteryLevel
 	RegisteredAt     time.Time
 	UpdatedAt        time.Time
 
-	// Entryは表示用に結合した辞書エントリ（永続化対象外）
+	// Entryは表示用に結合した辞書エントリ（永続化対象外）。
 	Entry *entry.Entry
 }
 
-// Newは単語帳への登録を作ります
+// Newは単語帳への登録を作ります。
 func New(userID, entryID uuid.UUID, memo, encounteredTitle string) *UserWord {
 	return &UserWord{
 		ID:               uuid.New(),
@@ -75,18 +75,18 @@ func New(userID, entryID uuid.UUID, memo, encounteredTitle string) *UserWord {
 	}
 }
 
-// ListFilterは単語帳の絞り込み検索です
+// ListFilterは単語帳の絞り込み検索です。
 type ListFilter struct {
-	// EncounteredTitleが非空なら、その作品で絞り込みます
+	// EncounteredTitleが非空なら、その作品で絞り込みます。
 	EncounteredTitle string
 
-	// Limit / Offsetはページング
-	// Limitが0なら既定値を使います
+	// Limit / Offsetはページング。
+	// Limitが0なら既定値を使います。
 	Limit  int
 	Offset int
 }
 
-// Repositoryは単語帳の永続化境界です
+// Repositoryは単語帳の永続化境界です。
 type Repository interface {
 	Create(ctx context.Context, w *UserWord) error
 	FindByID(ctx context.Context, userID, id uuid.UUID) (*UserWord, error)
@@ -97,8 +97,8 @@ type Repository interface {
 	Delete(ctx context.Context, userID, id uuid.UUID) error
 }
 
-// ViewRecorderは個別ページの閲覧を記録します
-// 生ログは直近90日分のみ保持し、日次バッチで集計に丸めます
+// ViewRecorderは個別ページの閲覧を記録します。
+// 生ログは直近90日分のみ保持し、日次バッチで集計に丸めます。
 type ViewRecorder interface {
 	RecordView(ctx context.Context, userWordID uuid.UUID, at time.Time) error
 }

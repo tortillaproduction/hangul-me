@@ -13,7 +13,7 @@ import (
 
 var ErrNotFound = errors.New("user: 見つかりません")
 
-// Planは課金プランです（v3で有料化導入予定）
+// Planは課金プランです（v3で有料化導入予定）。
 type Plan string
 
 const (
@@ -21,7 +21,7 @@ const (
 	PLanPremium Plan = "premium"
 )
 
-// DefaultWordLimitはプランごとの登録上限です
+// DefaultWordLimitはプランごとの登録上限です。
 func DefaultWordLimit(p Plan) int {
 	if p == PLanPremium {
 		return 10000
@@ -29,7 +29,7 @@ func DefaultWordLimit(p Plan) int {
 	return 100
 }
 
-// Userは利用者です
+// Userは利用者です。
 type User struct {
 	ID          uuid.UUID
 	ClerkUserID string
@@ -41,7 +41,7 @@ type User struct {
 	UpdateAt    time.Time
 }
 
-// NewはClerkの情報から利用者を作ります
+// NewはClerkの情報から利用者を作ります。
 func New(clerkUserID, email, displayName string) *User {
 	return &User{
 		ID:          uuid.New(),
@@ -53,13 +53,13 @@ func New(clerkUserID, email, displayName string) *User {
 	}
 }
 
-// CanRegisterMoreは現在の登録数から、さらに登録できるかを返します
+// CanRegisterMoreは現在の登録数から、さらに登録できるかを返します。
 func (u *User) CanRegisterMore(current int) bool { return current < u.WordLimit }
 
-// Repositoryは利用者の永続化境界です
+// Repositoryは利用者の永続化境界です。
 type Repository interface {
-	// EnsureByClerkIDはClerkのユーザーが未登録なら作成し、既存なら取得します
-	// (初回ログイン時のプロビジョニング)
+	// EnsureByClerkIDはClerkのユーザーが未登録なら作成し、既存なら取得します。
+	// (初回ログイン時のプロビジョニング)。
 	EnsureByClerkID(ctx context.Context, clerkUserID, email, displayName string) (*User, error)
 	FindByID(ctx context.Context, id uuid.UUID) (*User, error)
 }
