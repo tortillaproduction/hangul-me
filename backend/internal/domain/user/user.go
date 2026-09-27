@@ -18,12 +18,12 @@ type Plan string
 
 const (
 	PlanFree    Plan = "free"
-	PLanPremium Plan = "premium"
+	PlanPremium Plan = "premium"
 )
 
 // DefaultWordLimitはプランごとの登録上限です。
 func DefaultWordLimit(p Plan) int {
-	if p == PLanPremium {
+	if p == PlanPremium {
 		return 10000
 	}
 	return 100
@@ -38,7 +38,7 @@ type User struct {
 	Plan        Plan
 	WordLimit   int
 	CreatedAt   time.Time
-	UpdateAt    time.Time
+	UpdatedAt   time.Time
 }
 
 // NewはClerkの情報から利用者を作ります。
