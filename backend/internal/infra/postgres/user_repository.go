@@ -27,7 +27,7 @@ func scanUser(row scannable) (*user.User, error) {
 	var u user.User
 	var plan string
 
-	if err := row.Scan(&u.ID, &u.ClerkUserID, &u.Email, &u.DisplayName, &plan, &u.WordLimit, &u.CreatedAt, &u.UpdateAt); err != nil {
+	if err := row.Scan(&u.ID, &u.ClerkUserID, &u.Email, &u.DisplayName, &plan, &u.WordLimit, &u.CreatedAt, &u.UpdatedAt); err != nil {
 		return nil, err
 	}
 	u.Plan = user.Plan(plan)
