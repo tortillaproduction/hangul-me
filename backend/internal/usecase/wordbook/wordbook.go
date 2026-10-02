@@ -10,16 +10,16 @@ import (
 	"github.com/hangulme/hangul-me/backend/internal/domain/userword"
 )
 
-// Usecase は単語帳の参照・更新を担います。
-type Usecase struct {
+// UseCase は単語帳の参照・更新を担います。
+type UseCase struct {
 	userWords userword.Repository
 	entries   entry.Repository
 	views     userword.ViewRecorder
 	now       func() time.Time
 }
 
-func New(userWords userword.Repository, entries entry.Repository, views userword.ViewRecorder) *Usecase {
-	return &Usecase{
+func New(userWords userword.Repository, entries entry.Repository, views userword.ViewRecorder) *UseCase {
+	return &UseCase{
 		userWords: userWords,
 		entries:   entries,
 		views:     views,
@@ -28,7 +28,7 @@ func New(userWords userword.Repository, entries entry.Repository, views userword
 }
 
 // List は登録単語一覧を返します。
-func (u *Usecase) List(ctx context.Context, userID uuid.UUID, f userword.ListFilter) ([]*userword.UserWord, error) {
+func (u *UseCase) List(ctx context.Context, userID uuid.UUID, f userword.ListFilter) ([]*userword.UserWord, error) {
 	if f.Limit <= 0 || f.Limit > 200 {
 		f.Limit = 50
 	}
@@ -40,7 +40,7 @@ func (u *Usecase) List(ctx context.Context, userID uuid.UUID, f userword.ListFil
 // 閲覧の記録は生ログ（word_view_logs）に積み、
 // 日次バッチで user_word_daily_views に丸めて90日より古い生ログは消します。
 // 記録に失敗しても閲覧自体は成功として返します。
-func (u *Usecase) Detail(ctx context.Context, userID, id uuid.UUID) (*userword.UserWord, error) {
+func (u *UseCase) Detail(ctx context.Context, userID, id uuid.UUID) (*userword.UserWord, error) {
 	w, err := u.userWords.FindByID(ctx, userID, id)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ type UpdateInput struct {
 }
 
 // Update はメモ・「どこで聞いた？」・定着度を更新します。
-func (u *Usecase) Update(ctx context.Context, userID, id uuid.UUID, in UpdateInput) (*userword.UserWord, error) {
+func (u *UseCase) Update(ctx context.Context, userID, id uuid.UUID, in UpdateInput) (*userword.UserWord, error) {
 	w, err := u.userWords.FindByID(ctx, userID, id)
 	if err != nil {
 		return nil, err
@@ -93,6 +93,6 @@ func (u *Usecase) Update(ctx context.Context, userID, id uuid.UUID, in UpdateInp
 }
 
 // Delete は単語帳から削除します。
-func (u *Usecase) Delete(ctx context.Context, userID, id uuid.UUID) error {
+func (u *UseCase) Delete(ctx context.Context, userID, id uuid.UUID) error {
 	return u.userWords.Delete(ctx, userID, id)
 }

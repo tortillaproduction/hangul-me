@@ -48,18 +48,18 @@ type Output struct {
 	MatchedVia string
 }
 
-// Usecase は単語検索のユースケースです。
-type Usecase struct {
+// UseCase は単語検索のユースケースです。
+type UseCase struct {
 	matcher *matching.Service
 }
 
-func New(matcher *matching.Service) *Usecase { return &Usecase{matcher: matcher} }
+func New(matcher *matching.Service) *UseCase { return &UseCase{matcher: matcher} }
 
 // Search はうろ覚えの読みから候補一覧を返します。
 //
 // 入力中のリアルタイム検索から呼ばれるため、ここでは検索ログを書きません。
 // ログは「候補が選ばれて登録された」タイミング（registration）で1件だけ残します。
-func (u *Usecase) Search(ctx context.Context, raw string) (*Output, error) {
+func (u *UseCase) Search(ctx context.Context, raw string) (*Output, error) {
 	res, err := u.matcher.Match(ctx, raw)
 	if err != nil {
 		return nil, err
@@ -89,7 +89,7 @@ func (u *Usecase) Search(ctx context.Context, raw string) (*Output, error) {
 }
 
 // EntryDetail は辞書エントリの詳細（例文込み）を返します。
-func (u *Usecase) EntryDetail(ctx context.Context, repo entry.Repository, id uuid.UUID) (*entry.Entry, error) {
+func (u *UseCase) EntryDetail(ctx context.Context, repo entry.Repository, id uuid.UUID) (*entry.Entry, error) {
 	e, err := repo.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
