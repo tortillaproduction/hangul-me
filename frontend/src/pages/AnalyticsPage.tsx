@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import type { AnalyticsOverview } from '../api/types';
+import type { BarDatum } from '../components/charts/BarList';
 
 /**
  * 学習の記録（分析ビュー）。
@@ -79,30 +81,30 @@ function Panel({
 function TableView({ data }: { data: AnalyticsOverview }) {
     const sections: { title: string; rows: [string, number][]; unit: string }[] = [
         {
-        title: '初声の偏り',
-        rows: data.initialConsonants.map((b) => [b.label, b.count]),
-        unit: '語',
-        },
-        {
-        title: 'パッチムの分布',
-        rows: data.finalConsonants.map((b) => [b.label, b.count]),
-        unit: '語',
-        },
-        {
-        title: 'どこで聞いた？',
-        rows: data.encounteredTitles.map((b) => [b.label, b.count]),
-        unit: '語',
-        },
-        {
-        title: 'よく見返している単語',
-        rows: data.mostViewed.map((w) => [`${w.hangul}（${w.readingKana}）`, w.count]),
-        unit: '回',
-        },
-        {
-        title: 'よく調べた単語',
-        rows: data.mostSearched.map((w) => [`${w.hangul}（${w.readingKana}）`, w.count]),
-        unit: '回',
-        },
+      title: '初声の偏り',
+      rows: data.initialConsonants.map((b) => [b.label, b.count]),
+      unit: '語',
+    },
+    {
+      title: 'パッチムの分布',
+      rows: data.finalConsonants.map((b) => [b.label, b.count]),
+      unit: '語',
+    },
+    {
+      title: 'どこで聞いた？',
+      rows: data.encounteredTitles.map((b) => [b.label, b.count]),
+      unit: '語',
+    },
+    {
+      title: 'よく見返している単語',
+      rows: data.mostViewed.map((w) => [`${w.hangul}（${w.readingKana}）`, w.count]),
+      unit: '回',
+    },
+    {
+      title: 'よく調べた単語',
+      rows: data.mostSearched.map((w) => [`${w.hangul}（${w.readingKana}）`, w.count]),
+      unit: '回',
+    },
     ]
 
     return ()
