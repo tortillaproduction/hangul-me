@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { SignOutButton, useUser } from '@clerk/clerk-react';
 import { ChartIcon, ListIcon, PanelIcon, SearchPlusIcon, SettingsIcon, ThemeIcon } from './icons';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useTheme } from '@/hooks/useTheme';
 import { Tooltip } from './Tooltip';
 import { NeonLogo } from './NeonLogo';
-import { useTheme } from '../hooks/useTheme';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -32,7 +32,7 @@ export function AppLayout({ children, onOpenLookup }: AppLayoutProps) {
 
   return (
     <div className="flex h-full flex-col bg-surface-base text-base-content">
-      {/* ナビゲーションバー */}
+      {/* ナビゲーションバー */}
       <header className="flex h-topbar shrink-0 items-center gap-3 border-b border-surface-border bg-surface-raised px-3">
         <Tooltip label={toggleLabel}>
           <button
@@ -45,7 +45,7 @@ export function AppLayout({ children, onOpenLookup }: AppLayoutProps) {
           </button>
         </Tooltip>
 
-        {/* ロゴクリックでメインエリアの既定表示（単語登録一覧）へ戻る */}
+        {/* ロゴクリックでメインエリアの既定表示（登録単語一覧）へ戻る */}
         <button
           type="button"
           onClick={() => navigate('/words')}
@@ -79,7 +79,7 @@ export function AppLayout({ children, onOpenLookup }: AppLayoutProps) {
                 className="absolute right-0 z-20 mt-2 w-64 overflow-hidden rounded-xl border border-surface-border bg-surface-raised shadow-2xl"
                 role="menu"
               >
-                {/* ユーザー情報：丸アイコン＋名前（太字）＋メールを横並び */}
+                {/* ユーザー情報: 丸アイコン + 名前(太字) + メールを横並び */}
                 <div className="flex items-center gap-3 border-b border-surface-border px-4 py-3">
                   <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-700 text-sm font-semibold text-white">
                     {initial}
