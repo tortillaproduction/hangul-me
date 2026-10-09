@@ -91,74 +91,75 @@ export function LookupModal({ open, onClose, onRegistered }: LookupModalProps) {
     };
   }, [query, open]);
 
-// パネル位置はウィンドウ幅の変化に追従させる。
-useLayoutEffect(() => {
+  // パネル位置はウィンドウ幅の変化に追従させる。
+  useLayoutEffect(() => {
     if (!open) return;
     const update = () => setSide(decidePanelSide(fieldRef.current));
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
-}, [open, candidates.length]);
+  }, [open, candidates.length]);
 
-const register = useCallback(
+  const register = useCallback(
     async (candidate: Candidate) => {
-        if (submitting) return;
-        setSubmitting(true);
-        try {
-            const word = await api.registerWord({
-                entryId: candidate.entryId,
-                hangul: candidate.hangul,
-                readingKana: candidate.readingKana,
-                romanized: candidate.romanized,
-                meaningJa: candidate.meaningJa,
-                rawQuery: query,
-                matchedVia,
-            });
-            showToast('success', '単語帳に登録しました', `${word.hangul} (${word.readingKana})`);
-            onRegistered(word);
-        } catch (err) {
-            const message =
-                err instanceof ApiError ? err.message : '登録に失敗しました。時間をおいて試してください';
-            showToast('error', '登録できませんでした', message);
-        } finally {
-            setSubmitting(false);
-        }
+      if (submitting) return;
+      setSubmitting(true);
+      try {
+        const word = await api.registerWord({
+          entryId: candidate.entryId,
+          hangul: candidate.hangul,
+          readingKana: candidate.readingKana,
+          romanized: candidate.romanized,
+          meaningJa: candidate.meaningJa,
+          rawQuery: query,
+          matchedVia,
+        });
+        showToast('success', '単語帳に登録しました', `${word.hangul} (${word.readingKana})`);
+        onClose();
+        onRegistered(word);
+      } catch (err) {
+        const message =
+          err instanceof ApiError ? err.message : '登録に失敗しました。時間をおいて試してください';
+        showToast('error', '登録できませんでした', message);
+      } finally {
+        setSubmitting(false);
+      }
     },
     [matchedVia, onClose, onRegistered, query, showToast, submitting],
-)
+  );
 
-const onKeyDown = (e: React.KeyboardEvent) => {
+  const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-        return
+      e.preventDefault();
+      onClose();
+      return;
     }
 
-    if (!candidates.length) return
+    if (!candidates.length) return;
 
     if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        setHighlight((h) => (h + 1) % candidates.length)
+      e.preventDefault();
+      setHighlight((h) => (h + 1) % candidates.length);
     } else if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        setHighlight((h) => (h - 1 + candidates.length) % candidates.length)
+      e.preventDefault();
+      setHighlight((h) => (h - 1 + candidates.length) % candidates.length);
     } else if (e.key === 'Enter') {
-        e.preventDefault()
-        const picked = candidates[highlight]
-        if (picked) void register(picked)
+      e.preventDefault();
+      const picked = candidates[highlight];
+      if (picked) void register(picked);
     }
-}
+  };
 
-if (!open) return null;
+  if (!open) return null;
 
-const panelClass =
+  const panelClass =
     side === 'right'
-        ? 'md:absolute md:left-[calc(100%+1rem)] md:top-0 md:w-[320px]'
-        : side === 'left'
-            ? 'md:absolute md:right-[calc(100%+1rem)] md:top-0 md:w-[320px]'
-            : 'w-full';
+      ? 'md:absolute md:left-[calc(100%+1rem)] md:top-0 md:w-[320px]'
+      : side === 'left'
+        ? 'md:absolute md:right-[calc(100%+1rem)] md:top-0 md:w-[320px]'
+        : 'w-full';
 
-    return (
+  return (
     <div
       className="fixed inset-0 z-40 flex items-start justify-center bg-black/55 px-4 pt-[14vh] backdrop-blur-sm"
       onMouseDown={(e) => {
@@ -251,4 +252,3 @@ const panelClass =
     </div>
   );
 }
-
