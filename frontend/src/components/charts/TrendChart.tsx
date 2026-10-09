@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import type { DailyCount } from '../../api/types';
 
 interface TrendChartProps {
   data: DailyCount[];
