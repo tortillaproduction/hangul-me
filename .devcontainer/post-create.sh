@@ -18,6 +18,20 @@ for pair in ".:.env.example" "backend:.env.example" "frontend:.env.example"; do
   fi
 done
 
+# --- Claude Code ------------------------------------------------------------
+# 公式のネイティブインストーラーで ~/.local/bin に入れる（自動更新される）。
+echo "▶ Claude Code をインストールします"
+if curl -fsSL https://claude.ai/install.sh | bash; then
+  echo "  ✔ Claude Code をインストールしました"
+else
+  echo "  ⚠ Claude Code のインストールに失敗しました。'curl -fsSL https://claude.ai/install.sh | bash' を手動で実行してください"
+fi
+case ":$PATH:" in
+  *":$HOME/.local/bin:"*) ;;
+  *) grep -q '.local/bin' "$HOME/.bashrc" 2>/dev/null || echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc" ;;
+esac
+export PATH="$HOME/.local/bin:$PATH"
+
 # --- Go の依存 --------------------------------------------------------------
 echo "▶ Go の依存を取得します"
 if (cd backend && go mod download && go mod tidy); then

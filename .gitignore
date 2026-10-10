@@ -1,16 +1,57 @@
-# Go
-/backend/bin/
-*.tsbuildinfo
+# =============================================================================
+# Hangul-me
+# =============================================================================
 
-# Node
-node_modules/
-dist/
-.vite/
-
-# 環境変数
+# --- 環境変数・秘密情報 -------------------------------------------------------
+# .env.example だけを追跡する
 .env
 .env.local
 .env.*.local
+*.pem
 
-# OS
+# --- 大きな元データ -----------------------------------------------------------
+# 公式辞典（韓国語基礎辞典）の ZIP など。各自で data/ に置く
+/data/
+
+# --- Go（backend） -------------------------------------------------------------
+/backend/bin/
+/backend/tmp/
+*.test
+*.out
+coverage.html
+
+# --- Node（frontend） ----------------------------------------------------------
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- エディタ -----------------------------------------------------------------
+# 共有する設定（.vscode/settings.json など）だけを追跡する
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*~
+
+# --- Claude Code --------------------------------------------------------------
+# 個人用の設定・メモ。共有する指示書は CLAUDE.md
+.claude/settings.local.json
+CLAUDE.local.md
+
+# --- OS -----------------------------------------------------------------------
 .DS_Store
+Thumbs.db
+desktop.ini
+# Windows からコピーしたときに付く付帯情報
+*:Zone.Identifier
+
+# --- ログ・一時ファイル -------------------------------------------------------
+*.log
+tmp/

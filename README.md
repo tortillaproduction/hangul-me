@@ -15,15 +15,19 @@
 ```
 hangul-me/
 ├── .devcontainer/    Dev Container 設定（Go / Node / Docker / GitHub CLI / Claude Code）
+├── .vscode/          エディタの共通設定
 ├── backend/          Go / DDD（domain・usecase・infra・interface）
 ├── frontend/         Vite + React + TypeScript + React Router
 ├── db/
 │   ├── migrations/   スキーマ定義とシードデータ
 │   ├── jobs/         日次バッチ用SQL
 │   └── analytics.sql 可視化クエリのリファレンス
+├── data/             （追跡しない）公式辞典の元データなど、各自で置く大きなファイル
 ├── docs/
 │   ├── folder-structure.md     フォルダストラクチャ図（詳細）
-│   └── ubiquitous-language.md  用語対応表（随時追記）
+│   ├── ubiquitous-language.md  用語対応表（随時追記）
+│   ├── krdict-data.md          公式辞典（韓国語基礎辞典）のデータ形式と実測値
+│   └── tasks/                  作業指示書（進行中の作業の計画）
 ├── compose.yaml      開発スタックの一括起動
 └── CLAUDE.md         Claude Code 向けの指示書
 ```
@@ -40,8 +44,8 @@ hangul-me/
 | オブジェクトストレージ | Cloudflare R2（v2の発音音声用、未実装） | – |
 | AI補完 | Anthropic Messages API（候補不足時のみ呼び出し） | – |
 
-> Node 26 は 2026年10月に Active LTS へ移行する見込みの系列です。
-> LTS だけを使いたい場合は、`compose.yaml` / `.devcontainer/devcontainer.json` /
+> Node 26 は 2026年10月に LTS（長期サポート）へ移行する予定の系列です。
+> 移行前の段階で LTS だけを使いたい場合は、`frontend/Dockerfile` / `.devcontainer/devcontainer.json` /
 > `frontend/package.json` の `engines` を Node 24 に下げれば動きます。
 
 ---
@@ -56,6 +60,10 @@ hangul-me/
 VS Code で「Reopen in Container」を選ぶだけで、
 Go 1.27 / Node 26 / Docker / GitHub CLI / Claude Code が入った環境が立ち上がります。
 依存の取得と `.env` のひな形作成も自動で行われます。
+
+Claude Code は、作成時に公式のネイティブインストーラーで `~/.local/bin` に入ります（自動で更新されます）。
+`claude` が見つからない場合は、新しいターミナルを開くか、`curl -fsSL https://claude.ai/install.sh | bash` を実行してください。
+ログイン情報は `~/.claude` をボリュームに保存しているので、コンテナを作り直しても消えません。
 
 作成後、`.env` に `VITE_CLERK_PUBLISHABLE_KEY` を設定してから次へ進んでください。
 
@@ -212,6 +220,14 @@ cd backend && go run ./cmd/rollup    # cron等から日次で
 | GET | `/api/analytics/trending` | – | アプリ全体の人気単語トップN |
 
 ---
+
+## 進行中の作業
+
+公式辞典（国立国語院「韓国語基礎辞典」）で辞書を作り直す作業と、あいまいな読みに強い検索への改善を進めています。
+計画と進め方は **[docs/tasks/README.md](docs/tasks/README.md)** を参照してください。
+
+- 辞典のデータは CC BY-SA 2.0 KR です。元データ（ZIP、約84MB）は各自で `data/krdict/` に置きます（Git では追跡しません）
+- 現時点の辞書は、まだ開発用シードの15件だけです（`db/migrations/0002_seed_dictionary.sql`）
 
 ## 未実装 / 今後
 

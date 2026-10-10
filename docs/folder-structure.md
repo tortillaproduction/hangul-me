@@ -12,8 +12,8 @@
 ```
 hangul-me/
 ├── .devcontainer/                  VS Code Dev Container 設定
-│   ├── devcontainer.json             Go / Node / Docker / GitHub CLI / Claude Code と拡張機能
-│   └── post-create.sh                作成後の依存取得と .env のひな形作成
+│   ├── devcontainer.json             Go / Node / Docker / GitHub CLI と拡張機能
+│   └── post-create.sh                作成後のセットアップ（Claude Code のインストール・依存取得・.env のひな形作成）
 │
 ├── .vscode/
 │   └── settings.json                 保存時整形・Go/ESLintの共通設定
@@ -82,9 +82,16 @@ hangul-me/
 │   │   └── rollup_views.sql            閲覧ログの日次ロールアップ＋90日パージ
 │   └── analytics.sql                 可視化クエリのリファレンス
 │
+├── data/                           （Git で追跡しない）各自で置く大きな元データ
+│   └── krdict/                       公式辞典（韓国語基礎辞典）の全体ダウンロード ZIP
+│
 ├── docs/                           プロジェクトの共有ドキュメント
 │   ├── folder-structure.md           このファイル
-│   └── ubiquitous-language.md        ユビキタス言語一覧（用語対応表）
+│   ├── ubiquitous-language.md        ユビキタス言語一覧（用語対応表）
+│   ├── krdict-data.md                公式辞典のデータ形式と実測値
+│   └── tasks/                        作業指示書（1ファイル＝1ブランチ＝1つのPR）
+│       ├── README.md                   目次・進める順番・共通の決まり
+│       └── 01〜08-*.md                 各作業の指示書
 │
 ├── compose.yaml                    開発用スタックの一括起動（db / backend / frontend / rollup）
 ├── .env.example                    compose が読む環境変数のひな形
